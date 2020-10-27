@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="381.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controllers.ControllerUserWindow">
+   <children>
+      <CheckBox layoutX="26.0" layoutY="119.0" mnemonicParsing="false" onAction="#onActionTableCourses" text="courses">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </CheckBox>
+      <CheckBox layoutX="26.0" layoutY="184.0" mnemonicParsing="false" onAction="#onActionTableLessons" text="lesson">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </CheckBox>
+      <CheckBox layoutX="26.0" layoutY="252.0" mnemonicParsing="false" onAction="#onActionTableTeachers" text="teachers">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </CheckBox>
+      <CheckBox layoutX="26.0" layoutY="319.0" mnemonicParsing="false" onAction="#onActionTableUsers" text="users">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </CheckBox>
+      <Label alignment="CENTER" layoutX="91.0" layoutY="14.0" prefHeight="30.0" prefWidth="418.0" text="Резервное копирование базы данных" textFill="#0a7cee">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <TextField fx:id="txtPath" layoutX="164.0" layoutY="134.0" prefHeight="44.0" prefWidth="303.0">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </TextField>
+      <Button layoutX="467.0" layoutY="134.0" mnemonicParsing="false" onAction="#onActionPath" prefHeight="44.0" prefWidth="52.0" text="...">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Button>
+      <Text layoutX="200.0" layoutY="108.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Укажите путь сохранения">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Text>
+      <Button layoutX="458.0" layoutY="296.0" mnemonicParsing="false" onAction="#onActionEnd" text="Готово">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Button>
+      <Label fx:id="lblInfo" alignment="CENTER" contentDisplay="CENTER" layoutX="162.0" layoutY="244.0" prefHeight="17.0" prefWidth="359.0" />
+   </children>
+</AnchorPane>
