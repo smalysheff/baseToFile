@@ -1,19 +1,22 @@
 package sample.controllers;
 
+import javafx.beans.Observable;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.CheckBox;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
 import sample.Model;
 import sample.connection.ConnectionUtil;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
+import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ControllerUserWindow {
     Connection con;
@@ -21,67 +24,61 @@ public class ControllerUserWindow {
         con = ConnectionUtil.connDB();
     }
 
+
+    @FXML
+    private ComboBox<String> tableComboBox;
+
     @FXML
     private TextField txtPath;
 
     @FXML
     private Label lblInfo;
 
-    private String checkboxTable = "";
-
-    List<String> listCourses = new ArrayList<>();
-    List<String> listLesson = new ArrayList<>();
-    List<String> listTeachers = new ArrayList<>();
-    List<String> listUsers = new ArrayList<>();
-
-    //Query
-    private final String sqlCourses = "SELECT * FROM courses";
-    private final String sqlLessons = "SELECT * FROM lessons";
-    private final String sqlTeachers = "SELECT * FROM teachers";
-    private final String sqlUsers = "SELECT * FROM users";
-
     Model model = new Model();
 
+    ObservableList<String> queryTable;
+
+    ObservableList<String> tableList = FXCollections.observableArrayList();
+
+    //private String strComboBox = "";
+
     @FXML
-    void onActionEnd(ActionEvent event) {
-
-        model.createFile(checkboxTable, txtPath.getText(), listCourses);
-
+    void onActionCreate(ActionEvent event) {
+        lblInfo.setText("");
+        model.createFile(tableComboBox.getValue(), txtPath.getText(), queryTable);
+        lblInfo.setTextFill(Color.BLUE);
+        lblInfo.setText("Резервная копис таблицы " + tableComboBox.getValue() + " создалась");
     }
 
     @FXML
-    void onActionPath(ActionEvent event) {
+    void onActionComboBox(ActionEvent event){
+        if(!tableComboBox.isDisable()) {
+            int countTableField = model.quantityTableField(tableComboBox.getValue(), con);
+            queryTable = model.createQuery(tableComboBox.getValue(), countTableField, con);
+            lblInfo.setTextFill(Color.GREEN);
+            lblInfo.setText("SQL запрос по выборке данных таблицы " + tableComboBox.getValue() + "\nуспешно сформировался");
+        }
+    }
+
+    @FXML
+    void onActionDirectoryChooser(ActionEvent event) {
         model.directoryChooser(txtPath);
     }
 
     @FXML
-    void onActionTableCourses(ActionEvent event) throws SQLException {
+    public void initialize(){
 
-        checkboxTable = ((CheckBox)event.getSource()).getText();
+        tableComboBox.setStyle("-fx-font-size: 20");
+        tableComboBox.setItems(tableList);
 
-        CheckBox source = (CheckBox)event.getSource();
-        if(source.isSelected()){
-            PreparedStatement statement = con.prepareStatement(sqlCourses);
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()){
-                listCourses.add(String.format("%s %s %s %s\n", resultSet.getString(1), resultSet.getString(2),
-                        resultSet.getString(3), resultSet.getString(4)));
-
+        try {
+            DatabaseMetaData tableMetaData = con.getMetaData();
+            ResultSet courses = tableMetaData.getTables("courses", null, null, null);
+            while(courses.next()){
+                tableList.add(courses.getString(3));
             }
+        } catch (SQLException exception) {
+            exception.printStackTrace();
         }
-
     }
-    @FXML
-    void onActionTableLessons(ActionEvent event) throws SQLException {
-
-    }
-    @FXML
-    void onActionTableTeachers(ActionEvent event) throws SQLException {
-
-    }
-    @FXML
-    void onActionTableUsers(ActionEvent event) throws SQLException {
-
-    }
-
 }
